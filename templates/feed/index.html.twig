@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Feed layoffs{% endblock %}
+        {% block stylesheets %}
+
+            <style>
+
+                .card {
+                    margin: 0 auto; /* Added */
+                    float: none; /* Added */
+                    margin-bottom: 10px; /* Added */
+                    width: fit-content;
+                }
+
+                .card-img-top {
+                    width: 150px;
+                    object-fit: cover;
+                    border-radius: 50%;
+                    margin-left: auto;
+                    margin-right: auto;
+                    padding-top: 10px;
+                }
+
+                .social a{
+                    padding-right: 15px;
+                }
+
+                .cards{
+                    padding-top: 20px;
+                }
+
+            </style>
+
+        {% endblock %}
+
+{% block body %}
+
+    <div class="cards">
+
+    <div class="card col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <img src="https://via.placeholder.com/150 " class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Mehdi Dridi</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        </div>
+
+        <div class="card-body social">
+            <a href="#" class="fa fa-linkedin"></a>
+            <a href="#" class="fa fa-xing"></a>
+            <a href="#" class="fa fa-phone"></a>
+            <a href="#" class="fa fa-globe"></a>
+            <button class="btn btn-primary pull-right btn-sm RbtnMargin" type="button">Contact</button>
+        </div>
+
+    </div>
+
+    </div>
+    {% if articles %}
+        <table id="articles" class="table table-striped">
+            <thead>
+            <tr>
+                <th>Article Title</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for article in articles %}
+                <tr>
+                    <td>{{ article.title }}</td>
+                    <td>
+                        <a href="/article/{{ article.id }}" class="btn btn-dark">Show</a>
+                        <a href="/article/edit/{{ article.id }}" class="btn btn-light">Edit</a>
+                        <a href="#" class="btn btn-danger delete-article" data-id="{{ article.id }}">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No articles to display</p>
+    {% endif %}
+{% endblock %}
