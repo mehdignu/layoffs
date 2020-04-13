@@ -2,7 +2,27 @@
 
 {% block title %}New Article{% endblock %}
 
+        {% block stylesheets %}
+            <style>
+                .header{
+                    font-family: 'Baloo Paaji 2', cursive;
+                    font-size: 30px;
+                }
+
+                .subheader {
+                    font-family: 'Baloo Paaji 2', cursive;
+                    font-size: 18px;
+                }
+            </style>
+        {% endblock %}
+
+
 {% block body %}
+
+    <span class="header">Tell us about yourself</span>
+    <br>
+    <span class="subheader">We will try to connect you to hiring companies</span>
+    <hr>
     {{ form_start(form) }}
     {{ form_widget(form) }}
     {{ form_end(form) }}

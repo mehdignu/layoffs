@@ -17,6 +17,8 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FeedController extends AbstractController
 {
@@ -40,7 +42,7 @@ class FeedController extends AbstractController
         $article = new Layoff();
 
         $form = $this->createFormBuilder($article)
-            ->add('picture', FileType::class,array('attr' => array('class'=>'custom-file'),'required' => false), [
+            ->add('picture', FileType::class, array('attr' => array('class' => 'custom-file'), 'required' => false), [
                 'label' => 'Profile picture',
 
                 // unmapped means that this field is not associated to any entity property
@@ -65,14 +67,13 @@ class FeedController extends AbstractController
             ])
             ->add('name', TextType::class, array('attr' => array('class' => 'form-control')))
             ->add('email', EmailType::class, array('attr' => array('class' => 'form-control')))
-            ->add('linkedin', TextType::class, array('attr' => array('class' => 'form-control'),'required' => false))
-            ->add('xing', TextType::class, array('attr' => array('class' => 'form-control'),'required' => false))
-            ->add('phone', TextType::class, array('attr' => array('class' => 'form-control'),'required' => false))
-            ->add('portfolio', TextType::class, array('attr' => array('class' => 'form-control'),'required' => false))
-
+            ->add('linkedin', TextType::class, array('attr' => array('class' => 'form-control'), 'required' => false))
+            ->add('xing', TextType::class, array('attr' => array('class' => 'form-control'), 'required' => false))
+            ->add('phone', TextType::class, array('attr' => array('class' => 'form-control'), 'required' => false))
+            ->add('portfolio', TextType::class, array('attr' => array('class' => 'form-control'), 'required' => false))
             ->add('about', TextareaType::class, array(
                 'attr' => array('class' => 'form-control')
-                 ,'required' => false
+            , 'required' => false
             ))
             ->add('save', SubmitType::class, array(
                 'label' => 'Create',
@@ -85,33 +86,44 @@ class FeedController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $article = $form->getData();
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($article);
-            $entityManager->flush();
+            /** @var UploadedFile $picture */
+            $picture = $form->get('picture')->getData();
 
-            return $this->redirectToRoute('main_feed');
+            // this condition is needed because the 'brochure' field is not required
+            // so the PDF file must be processed only when a file is uploaded
+            if ($picture) {
+                $originalFilename = pathinfo($picture->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $newFilename = uniqid().'.'.$picture->guessExtension();
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $picture->move(
+                        $this->getParameter('pictures_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+
+
+                // updates the 'brochureFilename' property to store the PDF file name
+                // instead of its contents
+                $article->setPicture($newFilename);
+
+            }
+
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($article);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('main_feed');
+            }
+
+            return $this->render('layoffs/create.html.twig', array(
+                'form' => $form->createView()
+            ));
         }
+        
 
-        return $this->render('layoffs/create.html.twig', array(
-            'form' => $form->createView()
-        ));
     }
-
-//        /**
-//         * @Route("/feed/save")
-//         * @Method({"GET"})
-//         */
-//        public function save(){
-//            $em = $this->getDoctrine()->getManager();
-//
-//            $article = new Feed();
-//            $article->setTitle('article boo');
-//            $article->setBody('this is article boo body');
-//
-//            $em->persist($article);
-//            $em->flush();
-//
-//            return new Response('saved an article with id of ' . $article->getId());
-//        }
-
-}
