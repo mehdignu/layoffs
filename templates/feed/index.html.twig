@@ -14,11 +14,12 @@
 
                 .card-img-top {
                     width: 150px;
+                    height: 150px;
                     object-fit: cover;
                     border-radius: 50%;
                     margin-left: auto;
                     margin-right: auto;
-                    padding-top: 10px;
+                    margin-top: 10px;
                 }
 
                 .social a {
@@ -39,6 +40,7 @@
                     font-size: 25px;
                 }
 
+
             </style>
 
         {% endblock %}
@@ -54,49 +56,87 @@
         </div>
     </div>
     <hr>
-    <div class="cards">
 
-        <div class="card col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <img src="https://via.placeholder.com/150 " class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Mehdi Dridi</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                    card's content.</p>
-            </div>
+    {% if layoffs %}
+        <div class="cards">
+            {% for layoff in layoffs %}
 
-            <div class="card-body social">
-                <a href="#" class="fa fa-linkedin"></a>
-                <a href="#" class="fa fa-xing"></a>
-                <a href="#" class="fa fa-phone"></a>
-                <a href="#" class="fa fa-globe"></a>
-                <button class="btn btn-primary pull-right btn-sm RbtnMargin" type="button">Contact</button>
-            </div>
+                <div class="card col-lg-6 col-md-6 col-sm-12 col-xs-12">
 
+                    {% if layoff.picture %}
+                        <img src="{{ asset('uploads/pictures/' ~ layoff.picture) }}" class="card-img-top rounded-circle"
+                             alt="{{ layoff.name }}">
+
+                    {% else %}
+                        <img src="{{ asset('uploads/default/user.png') }}" class="card-img-top rounded-circle"
+                             alt="{{ layoff.name }}">
+                    {% endif %}
+
+                    <div class="card-body">
+                        <h5 class="card-title">{{ layoff.name }}</h5>
+                        <p class="card-text">{{ layoff.about }}</p>
+                    </div>
+
+                    <div class="card-body social">
+
+                        {% if layoff.linkedin %}
+                            <a href="{{ layoff.linkedin }}" target="_blank" class="fa fa-linkedin"></a>
+                        {% endif %}
+
+                        {% if layoff.xing %}
+                            <a href="{{ layoff.xing }}" target="_blank" class="fa fa-xing"></a>
+                        {% endif %}
+
+                        {% if layoff.phone %}
+                            <a href="tel:{{ layoff.phone }}" target="_blank" class="fa fa-phone"></a>
+                        {% endif %}
+
+                        {% if layoff.portfolio %}
+                            <a href="{{ layoff.portfolio }}" target="_blank" class="fa fa-globe"></a>
+                        {% endif %}
+
+
+                        <button onclick=" window.open('mailto:{{ layoff.email }}', '_blank');
+                                " class="btn btn-primary pull-right btn-sm RbtnMargin" type="button">Contact
+                        </button>
+                    </div>
+
+                </div>
+            {% endfor %}
+           
         </div>
 
-    </div>
-    {#    {% if articles %}#}
-    {#        <table id="articles" class="table table-striped">#}
-    {#            <thead>#}
-    {#            <tr>#}
-    {#                <th>Article Title</th>#}
-    {#                <th>Actions</th>#}
-    {#            </tr>#}
-    {#            </thead>#}
-    {#            <tbody>#}
-    {#            {% for article in articles %}#}
-    {#                <tr>#}
-    {#                    <td>{{ article.title }}</td>#}
-    {#                    <td>#}
-    {#                        <a href="/article/{{ article.id }}" class="btn btn-dark">Show</a>#}
-    {#                        <a href="/article/edit/{{ article.id }}" class="btn btn-light">Edit</a>#}
-    {#                        <a href="#" class="btn btn-danger delete-article" data-id="{{ article.id }}">Delete</a>#}
-    {#                    </td>#}
-    {#                </tr>#}
-    {#            {% endfor %}#}
-    {#            </tbody>#}
-    {#        </table>#}
-    {#    {% else %}#}
-    {#        <p>No articles to display</p>#}
-    {#    {% endif %}#}
+
+
+
+    {% else %}
+        <p>No Feed to display</p>
+    {% endif %}
 {% endblock %}
+
+
+
+ {% block javascripts %}
+     <script>
+         function onSuccess(googleUser) {
+             console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
+         }
+         function onFailure(error) {
+             console.log(error);
+         }
+         function renderButton() {
+             gapi.signin2.render('my-signin2', {
+                 'scope': 'profile email',
+                 'width': 240,
+                 'height': 50,
+                 'longtitle': true,
+                 'theme': 'dark',
+                 'onsuccess': onSuccess,
+                 'onfailure': onFailure
+             });
+         }
+     </script>
+     <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
+
+
+ {% endblock %}

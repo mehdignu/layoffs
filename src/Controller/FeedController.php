@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use League\OAuth2\Client\Provider\Google;
 
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -23,6 +24,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class FeedController extends AbstractController
 {
 
+
     /**
      * @Route("/",  name="main_feed")
      * @Method({"GET"})
@@ -30,7 +32,7 @@ class FeedController extends AbstractController
     public function index()
     {
         $feed = $this->getDoctrine()->getRepository(Layoff::class)->findAll();
-        return $this->render('feed/index.html.twig', array('articles' => $feed));
+        return $this->render('feed/index.html.twig', array('layoffs' => $feed));
     }
 
     /**
