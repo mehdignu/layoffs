@@ -57,53 +57,53 @@
     </div>
     <hr>
 
-    {% if layoffs %}
+    {% if feeds %}
         <div class="cards">
-            {% for layoff in layoffs %}
+            {% for feed in feeds %}
 
                 <div class="card col-lg-6 col-md-6 col-sm-12 col-xs-12">
 
-                    {% if layoff.picture %}
-                        <img src="{{ asset('uploads/pictures/' ~ layoff.picture) }}" class="card-img-top rounded-circle"
-                             alt="{{ layoff.name }}">
+                    {% if feed.picture %}
+                        <img src="{{ asset('uploads/pictures/' ~ feed.picture) }}" class="card-img-top rounded-circle"
+                             alt="{{ feed.name }}">
 
                     {% else %}
                         <img src="{{ asset('uploads/default/user.png') }}" class="card-img-top rounded-circle"
-                             alt="{{ layoff.name }}">
+                             alt="{{ feed.name }}">
                     {% endif %}
 
                     <div class="card-body">
-                        <h5 class="card-title">{{ layoff.name }}</h5>
-                        <p class="card-text">{{ layoff.about }}</p>
+                        <h5 class="card-title">{{ feed.name }}</h5>
+                        <p class="card-text">{{ feed.about }}</p>
                     </div>
 
                     <div class="card-body social">
 
-                        {% if layoff.linkedin %}
-                            <a href="{{ layoff.linkedin }}" target="_blank" class="fa fa-linkedin"></a>
+                        {% if feed.linkedin %}
+                            <a href="{{ feed.linkedin }}" target="_blank" class="fa fa-linkedin"></a>
                         {% endif %}
 
-                        {% if layoff.xing %}
-                            <a href="{{ layoff.xing }}" target="_blank" class="fa fa-xing"></a>
+                        {% if feed.xing %}
+                            <a href="{{ feed.xing }}" target="_blank" class="fa fa-xing"></a>
                         {% endif %}
 
-                        {% if layoff.phone %}
-                            <a href="tel:{{ layoff.phone }}" target="_blank" class="fa fa-phone"></a>
+                        {% if feed.phone %}
+                            <a href="tel:{{ feed.phone }}" target="_blank" class="fa fa-phone"></a>
                         {% endif %}
 
-                        {% if layoff.portfolio %}
-                            <a href="{{ layoff.portfolio }}" target="_blank" class="fa fa-globe"></a>
+                        {% if feed.portfolio %}
+                            <a href="{{ feed.portfolio }}" target="_blank" class="fa fa-globe"></a>
                         {% endif %}
 
 
-                        <button onclick=" window.open('mailto:{{ layoff.email }}', '_blank');
+                        <button onclick=" window.open('mailto:{{ feed.email }}', '_blank');
                                 " class="btn btn-primary pull-right btn-sm RbtnMargin" type="button">Contact
                         </button>
                     </div>
 
                 </div>
             {% endfor %}
-           
+
         </div>
 
 
@@ -117,13 +117,26 @@
 
 
  {% block javascripts %}
+
+
      <script>
          function onSuccess(googleUser) {
-             console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
+             const access_token = googleUser.getAuthResponse().id_token;
+
+             $.post('{{ path('user_login') }}',
+                 {token: access_token},
+                 function (response) {
+
+                     console.log(response);
+
+                 }, "json");
+
          }
+
          function onFailure(error) {
              console.log(error);
          }
+
          function renderButton() {
              gapi.signin2.render('my-signin2', {
                  'scope': 'profile email',
@@ -133,6 +146,13 @@
                  'theme': 'dark',
                  'onsuccess': onSuccess,
                  'onfailure': onFailure
+             });
+         }
+
+         function signOut() {
+             var auth2 = gapi.auth2.getAuthInstance();
+             auth2.signOut().then(function() {
+                 console.log('User signed out.');
              });
          }
      </script>

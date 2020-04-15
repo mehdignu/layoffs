@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20200411224434 extends AbstractMigration
+final class Version20200415231529 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -22,8 +22,8 @@ final class Version20200411224434 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('CREATE SEQUENCE layoff_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE TABLE layoff (id INT NOT NULL, name VARCHAR(255) NOT NULL, picture VARCHAR(255) DEFAULT NULL, linkedin VARCHAR(255) DEFAULT NULL, xing VARCHAR(255) DEFAULT NULL, phone VARCHAR(255) DEFAULT NULL, portfolio VARCHAR(255) DEFAULT NULL, about VARCHAR(255) DEFAULT NULL, email VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE SEQUENCE "users_id_seq" INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql('CREATE TABLE "users" (id INT NOT NULL, name VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, picture VARCHAR(255) DEFAULT NULL, linkedin VARCHAR(255) DEFAULT NULL, xing VARCHAR(255) DEFAULT NULL, phone VARCHAR(255) DEFAULT NULL, portfolio VARCHAR(255) DEFAULT NULL, about VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id))');
     }
 
     public function down(Schema $schema) : void
@@ -32,7 +32,7 @@ final class Version20200411224434 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('CREATE SCHEMA public');
-        $this->addSql('DROP SEQUENCE layoff_id_seq CASCADE');
-        $this->addSql('DROP TABLE layoff');
+        $this->addSql('DROP SEQUENCE "users_id_seq" CASCADE');
+        $this->addSql('DROP TABLE "users"');
     }
 }
