@@ -73,7 +73,7 @@ class UserController extends AbstractController
      */
     public function userLogout(Request $request){
         $token = $request->request->get('token');
-        $token = $this->get('session')->clear();
+        $this->get('session')->clear();
 
         $clientId = $_ENV['OAUTH_GOOGLE_ID'];
         $client = new \Google_Client(['client_id' => $clientId]);  // Specify the CLIENT_ID of the app that accesses the backend
