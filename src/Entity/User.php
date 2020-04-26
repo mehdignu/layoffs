@@ -57,6 +57,11 @@ class User
      */
     private $about;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isPublic = false;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -154,6 +159,18 @@ class User
     public function setAbout(?string $about): self
     {
         $this->about = $about;
+
+        return $this;
+    }
+
+    public function getIsPublic(): ?bool
+    {
+        return $this->isPublic;
+    }
+
+    public function setIsPublic(bool $isPublic): self
+    {
+        $this->isPublic = $isPublic;
 
         return $this;
     }

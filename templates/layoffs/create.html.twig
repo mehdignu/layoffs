@@ -1,17 +1,35 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Article{% endblock %}
+{% block title %}Profile{% endblock %}
 
         {% block stylesheets %}
             <style>
-                .header{
+                .header {
                     font-family: 'Baloo Paaji 2', cursive;
-                    font-size: 30px;
+                    font-size: 45px;
                 }
 
                 .subheader {
                     font-family: 'Baloo Paaji 2', cursive;
-                    font-size: 18px;
+                    font-size: 25px;
+                }
+
+                .card-img-top {
+                    width: 150px;
+                    height: 150px;
+                    object-fit: cover;
+                    border-radius: 50%;
+                    margin-left: auto;
+                    margin-right: auto;
+                    margin-top: 10px;
+                }
+
+                .card {
+                    margin: 0 auto; /* Added */
+                    float: none; /* Added */
+                    margin-bottom: 10px; /* Added */
+                    width: fit-content;
+                    border: none;
                 }
             </style>
         {% endblock %}
@@ -23,7 +41,21 @@
     <br>
     <span class="subheader">We will try to connect you to hiring companies</span>
     <hr>
+
+    <div class="card col-lg-9 col-md-9 col-sm-12 col-xs-12">
+
+    {% if picture %}
+        <img src="{{ asset('uploads/pictures/' ~ picture) }}" class="card-img-top rounded-circle"
+             alt="{{ name }}">
+
+    {% else %}
+        <img src="{{ asset('uploads/default/user.png') }}" class="card-img-top rounded-circle"
+             alt="{{ name }}">
+    {% endif %}
+    </div>
     {{ form_start(form) }}
     {{ form_widget(form) }}
     {{ form_end(form) }}
+
+
 {% endblock %}

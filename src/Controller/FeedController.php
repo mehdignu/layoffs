@@ -32,13 +32,14 @@ class FeedController extends AbstractController
      */
     public function index()
     {
+
         $feed = $this->getDoctrine()->getRepository(User::class)->findAll();
 
         $token = $this->get('session')->get('token');
         $loggedIn = false;
 
-        if (!empty($token) && null != $token) {
 
+        if ($token) {
             $clientId = $_ENV['OAUTH_GOOGLE_ID'];
             $client = new \Google_Client(['client_id' => $clientId]);  // Specify the CLIENT_ID of the app that accesses the backend
             $payload = $client->verifyIdToken($token);
@@ -47,100 +48,8 @@ class FeedController extends AbstractController
             }
         }
 
-        return $this->render('feed/index.html.twig', array('feeds' => $feed, 'loggedIn' => $loggedIn));
+        return $this->render('feed/index.html.twig', array('feeds' => $feed, 'loggedIn' => $loggedIn, 'token' => $token));
+        
     }
-
-    /**
-     * @Route("/new", name="create_layoff")
-     * Method({"GET", "POST"})
-     */
-    public function create(Request $request)
-    {
-        $article = new Layoff();
-
-        $form = $this->createFormBuilder($article)
-            ->add('picture', FileType::class, array('attr' => array('class' => 'custom-file'), 'required' => false), [
-                'label' => 'Profile picture',
-
-                // unmapped means that this field is not associated to any entity property
-                'mapped' => false,
-
-                // make it optional so you don't have to re-upload the PDF file
-                // every time you edit the Product details
-                'required' => false,
-
-                // unmapped fields can't define their validation using annotations
-                // in the associated entity, so you can use the PHP constraint classes
-                'constraints' => [
-                    new File([
-                        'maxSize' => '5024k',
-                        'mimeTypes' => [
-                            'image/jpeg',
-                            'image/png',
-                        ],
-                        'mimeTypesMessage' => 'Please upload a valid image',
-                    ])
-                ],
-            ])
-            ->add('name', TextType::class, array('attr' => array('class' => 'form-control')))
-            ->add('email', EmailType::class, array('attr' => array('class' => 'form-control')))
-            ->add('linkedin', TextType::class, array('attr' => array('class' => 'form-control'), 'required' => false))
-            ->add('xing', TextType::class, array('attr' => array('class' => 'form-control'), 'required' => false))
-            ->add('phone', TextType::class, array('attr' => array('class' => 'form-control'), 'required' => false))
-            ->add('portfolio', TextType::class, array('attr' => array('class' => 'form-control'), 'required' => false))
-            ->add('about', TextareaType::class, array(
-                'attr' => array('class' => 'form-control')
-            , 'required' => false
-            ))
-            ->add('save', SubmitType::class, array(
-                'label' => 'Create',
-                'attr' => array('class' => 'btn btn-primary mt-3')
-            ))
-            ->getForm();
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $article = $form->getData();
-
-            /** @var UploadedFile $picture */
-            $picture = $form->get('picture')->getData();
-
-            // this condition is needed because the 'brochure' field is not required
-            // so the PDF file must be processed only when a file is uploaded
-            if ($picture) {
-                $originalFilename = pathinfo($picture->getClientOriginalName(), PATHINFO_FILENAME);
-                // this is needed to safely include the file name as part of the URL
-                $newFilename = uniqid() . '.' . $picture->guessExtension();
-
-                // Move the file to the directory where brochures are stored
-                try {
-                    $picture->move(
-                        $this->getParameter('pictures_directory'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
-                }
-
-
-                // updates the 'brochureFilename' property to store the PDF file name
-                // instead of its contents
-                $article->setPicture($newFilename);
-
-            }
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($article);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('main_feed');
-        }
-
-        return $this->render('layoffs/create.html.twig', array(
-            'form' => $form->createView()
-        ));
-    }
-
 
 }

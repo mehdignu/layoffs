@@ -46,70 +46,163 @@
         {% endblock %}
 
 {% block body %}
-
+    <span style="  display: none; visibility: hidden;" class="js-user-auth"
+          data-is-authenticated="{{ loggedIn ? 'true' : 'false' }}"></span>
     <div class="row">
         <div class="col-12 mx-auto">
             <div class="text-center">
                 <span class="header">Hire Talents affected by recent layoffs</span><br>
                 <!-- <span class="subheader">(Only Germany at the moment)</span> -->
-                <span class="subheader">(Website still under construction)</span>
+                <span class="subheader">(Only in Germany at the moment)</span>
             </div>
         </div>
     </div>
     <hr>
 
-    {% if feeds %}
-        <div class="cards">
-            {% for feed in feeds %}
 
-                <div class="card col-lg-6 col-md-6 col-sm-12 col-xs-12">
+    <div class="row">
 
-                    {% if feed.picture %}
-                        <img src="{{ asset('uploads/pictures/' ~ feed.picture) }}" class="card-img-top rounded-circle"
-                             alt="{{ feed.name }}">
 
-                    {% else %}
-                        <img src="{{ asset('uploads/default/user.png') }}" class="card-img-top rounded-circle"
-                             alt="{{ feed.name }}">
-                    {% endif %}
+        <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
 
-                    <div class="card-body">
-                        <h5 class="card-title">{{ feed.name }}</h5>
-                        <p class="card-text">{{ feed.about }}</p>
-                    </div>
+            {% if feeds %}
+                <div class="cards">
+                    {% for feed in feeds %}
 
-                    <div class="card-body social">
+                        {% if feed.isPublic == 1 %}
 
-                        {% if feed.linkedin %}
-                            <a href="{{ feed.linkedin }}" target="_blank" class="fa fa-linkedin"></a>
+
+                            <div class="card col-lg-9 col-md-9 col-sm-12 col-xs-12">
+
+                                {% if feed.picture %}
+                                    <img src="{{ asset('uploads/pictures/' ~ feed.picture) }}"
+                                         class="card-img-top rounded-circle"
+                                         alt="{{ feed.name }}">
+
+                                {% else %}
+                                    <img src="{{ asset('uploads/default/user.png') }}"
+                                         class="card-img-top rounded-circle"
+                                         alt="{{ feed.name }}">
+                                {% endif %}
+
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ feed.name }}</h5>
+                                    <p class="card-text">{{ feed.about }}
+
+                                    </p>
+                                </div>
+
+                                <div class="card-body social">
+
+                                    {% if feed.linkedin %}
+
+                                        <a href="tel:{{ loggedIn ? feed.linkedin : '#' }}"
+                                           target="{{ loggedIn ? '_blank' : '' }}"
+                                           data-toggle="{{ loggedIn ? '' : 'modal' }}"
+                                           data-target="{{ loggedIn ? '' : '#myModal' }}" class="fa fa-linkedin"></a>
+
+                                    {% endif %}
+
+                                    {% if feed.xing %}
+
+                                        <a href="tel:{{ loggedIn ? feed.xing : '#' }}"
+                                           target="{{ loggedIn ? '_blank' : '' }}"
+                                           data-toggle="{{ loggedIn ? '' : 'modal' }}"
+                                           data-target="{{ loggedIn ? '' : '#myModal' }}" class="fa fa-xing"></a>
+
+                                    {% endif %}
+
+                                    {% if feed.phone %}
+
+                                        <a href="tel:{{ loggedIn ? feed.phone : '#' }}"
+                                           target="{{ loggedIn ? '_blank' : '' }}"
+                                           data-toggle="{{ loggedIn ? '' : 'modal' }}"
+                                           data-target="{{ loggedIn ? '' : '#myModal' }}" class="fa fa-phone"></a>
+
+                                    {% endif %}
+
+                                    {% if feed.portfolio %}
+
+                                        <a href="{{ loggedIn ? feed.portfolio : '#' }}"
+                                           target="{{ loggedIn ? '_blank' : '' }}"
+                                           data-toggle="{{ loggedIn ? '' : 'modal' }}"
+                                           data-target="{{ loggedIn ? '' : '#myModal' }}" class="fa fa-globe"></a>
+
+                                    {% endif %}
+
+                                    {% if loggedIn %}
+
+                                        <button onclick=" window.open('mailto:{{ feed.email }}', '_blank');
+                                                " class="btn btn-primary pull-right btn-sm RbtnMargin" type="button">
+                                            Contact
+                                        </button>
+                                    {% else %}
+                                        <button data-toggle="modal" data-target="#myModal"
+                                                class="btn btn-primary pull-right btn-sm RbtnMargin" type="button">
+                                            Contact
+                                        </button>
+                                    {% endif %}
+                                </div>
+
+                            </div>
+
                         {% endif %}
 
-                        {% if feed.xing %}
-                            <a href="{{ feed.xing }}" target="_blank" class="fa fa-xing"></a>
-                        {% endif %}
 
-                        {% if feed.phone %}
-                            <a href="tel:{{ feed.phone }}" target="_blank" class="fa fa-phone"></a>
-                        {% endif %}
-
-                        {% if feed.portfolio %}
-                            <a href="{{ feed.portfolio }}" target="_blank" class="fa fa-globe"></a>
-                        {% endif %}
-
-
-                        <button onclick=" window.open('mailto:{{ feed.email }}', '_blank');
-                                " class="btn btn-primary pull-right btn-sm RbtnMargin" type="button">Contact
-                        </button>
-                    </div>
+                    {% endfor %}
 
                 </div>
-            {% endfor %}
 
+            {% else %}
+                <p>No Feed to display</p>
+            {% endif %}
         </div>
-        
-    {% else %}
-        <p>No Feed to display</p>
-    {% endif %}
+
+        <div class="col">
+            <div class="card bg-light">
+
+                <div class="card-body">
+                    <h5 class="card-title font-weight-bold"><b>were you affected by the recent layoffs ?</b></h5>
+                    <p class="card-text">Add your profile so that we can connect you to new job opportunities.</p>
+                    {% if loggedIn %}
+
+
+                        <a href="{{ path('user_profile') }}" class="btn btn-primary">Submit your profile</a>
+
+                    {% else %}
+
+
+                        <a href="#" data-toggle="modal" data-target="#myModal" class="btn btn-primary">Submit your
+                            profile</a>
+
+
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- The Modal -->
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content" style="justify-content: center; align-items: center;">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Login with Google</h4>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body  col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div id="my-signin2"></div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 
@@ -118,16 +211,26 @@
 
 
      <script>
+
+
          function onSuccess(googleUser) {
              const access_token = googleUser.getAuthResponse().id_token;
+             var userAuthenticated = document.querySelector('.js-user-auth');
+             var isAuthenticated = userAuthenticated.dataset.isAuthenticated;
 
-             $.post('{{ path('user_login') }}',
-                 {token: access_token},
-                 function (response) {
+             if (isAuthenticated === 'false') {
 
-                     console.log(response);
+                 $.post('{{ path('user_login') }}',
 
-                 }, "json");
+                     {token: access_token},
+
+                     function (response) {
+
+                         location.reload();
+                         return false;
+
+                     }, "json");
+             }
 
          }
 
@@ -149,7 +252,7 @@
 
          function signOut() {
              var auth2 = gapi.auth2.getAuthInstance();
-             auth2.signOut().then(function() {
+             auth2.signOut().then(function () {
                  console.log('User signed out.');
              });
          }
