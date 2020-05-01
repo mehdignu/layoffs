@@ -23,6 +23,8 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+
 class UserController extends AbstractController
 {
 
@@ -74,6 +76,33 @@ class UserController extends AbstractController
                         ],
                     ])
                     ->add('name', TextType::class, array('attr' => array('class' => 'form-control')))
+                    ->add('city', ChoiceType::class, array(
+                        'label' => 'Bundesland',
+
+                        'attr' => array('class' => 'form-control'),
+
+                        'choices' => array(
+                            'Bundesländer' => array(
+                                'Baden-Württemberg' => 'Baden-Württemberg',
+                                'Bayern' => 'Bayern',
+                                'Berlin' => 'Berlin',
+                                'Brandenburg' => 'Brandenburg',
+                                'Bremen' => 'Bremen',
+                                'Hamburg' => 'Hamburg',
+                                'Hessen' => 'Hessen',
+                                'Mecklenburg-Vorpommern' => 'Mecklenburg-Vorpommern',
+                                'Niedersachsen' => 'Niedersachsen',
+                                'Nordrhein-Westfalen' => 'Nordrhein-Westfalen',
+                                'Rheinland-Pfalz' => 'Rheinland-Pfalz',
+                                'Saarland' => 'Saarland',
+                                'Sachsen' => 'Sachsen',
+                                'Sachsen-Anhalt' => 'Sachsen-Anhalt',
+                                'Schleswig-Holstein' => 'Schleswig-Holstein',
+                                'Thüringen' => 'Thüringen',
+                            )
+                        ),
+                    ))
+                    ->add('profession', TextType::class, array('attr' => array('class' => 'form-control'), 'required' => true))
                     ->add('email', EmailType::class, array('attr' => array('class' => 'form-control')))
                     ->add('linkedin', TextType::class, array('attr' => array('class' => 'form-control'), 'required' => false))
                     ->add('xing', TextType::class, array('attr' => array('class' => 'form-control'), 'required' => false))
@@ -188,8 +217,6 @@ class UserController extends AbstractController
 
             }
         }
-
-//        return $this->redirectToRoute('user_profile');
 
         $json_data = array(
             'data' => 100,

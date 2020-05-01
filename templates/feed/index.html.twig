@@ -40,7 +40,6 @@
                     font-size: 25px;
                 }
 
-
             </style>
 
         {% endblock %}
@@ -72,7 +71,7 @@
                         {% if feed.isPublic == 1 %}
 
 
-                            <div class="card col-lg-9 col-md-9 col-sm-12 col-xs-12">
+                            <div class="card w-100 col-lg-9 col-md-9 col-sm-12 col-xs-12">
 
                                 {% if feed.picture %}
                                     <img src="{{ asset('uploads/pictures/' ~ feed.picture) }}"
@@ -87,6 +86,9 @@
 
                                 <div class="card-body">
                                     <h5 class="card-title">{{ feed.name }}</h5>
+
+                                    <p>{{ feed.profession }}  {{ feed.city ? ' - ' ~ feed.city : '' }}</p>
+
                                     <p class="card-text">{{ feed.about }}
 
                                     </p>
@@ -146,6 +148,8 @@
 
                             </div>
 
+                            <hr />
+
                         {% endif %}
 
 
@@ -166,15 +170,12 @@
                     <p class="card-text">Add your profile so that we can connect you to new job opportunities.</p>
                     {% if loggedIn %}
 
-
                         <a href="{{ path('user_profile') }}" class="btn btn-primary">Submit your profile</a>
 
                     {% else %}
 
-
                         <a href="#" data-toggle="modal" data-target="#myModal" class="btn btn-primary">Submit your
                             profile</a>
-
 
                     {% endif %}
 
@@ -183,26 +184,7 @@
         </div>
 
     </div>
-
-    <!-- The Modal -->
-    <div class="modal fade" id="myModal">
-        <div class="modal-dialog">
-            <div class="modal-content" style="justify-content: center; align-items: center;">
-
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <h4 class="modal-title">Login with Google</h4>
-                </div>
-
-                <!-- Modal body -->
-                <div class="modal-body  col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                    <div id="my-signin2"></div>
-
-                </div>
-
-            </div>
-        </div>
-    </div>
+    
 {% endblock %}
 
 
