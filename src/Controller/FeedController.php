@@ -52,4 +52,39 @@ class FeedController extends AbstractController
         
     }
 
+
+    /**
+     * @Route("/privacy",  name="privacy")
+     * @Method({"GET"})
+     */
+    public function privacy()
+    {
+        $token = $this->get('session')->get('token');
+        $loggedIn = false;
+
+
+        if ($token) {
+            $clientId = $_ENV['OAUTH_GOOGLE_ID'];
+            $client = new \Google_Client(['client_id' => $clientId]);  // Specify the CLIENT_ID of the app that accesses the backend
+            $payload = $client->verifyIdToken($token);
+            if ($payload) {
+                $loggedIn = true;
+            }
+        }
+
+        return $this->render('static/privacy.html.twig', array('loggedIn' => $loggedIn));
+
+    }
+
+    /**
+     * @Route("/impressum",  name="impressum")
+     * @Method({"GET"})
+     */
+    public function impressum()
+    {
+
+        return $this->render('static/impressum.html.twig');
+
+    }
+
 }

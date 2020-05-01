@@ -2,6 +2,9 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        <meta name="description" content="Hire talent affected by recent layoffs.">
+        <meta name="keywords" content="Layoffs, Hire, Germany">
+        <meta name="author" content="Mehdi Dridi">
         <title>{% block title %}Welcome!{% endblock %}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -9,9 +12,22 @@
         <link rel="stylesheet" href="https://bootswatch.com/4/cosmo/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link href="https://fonts.googleapis.com/css2?family=Baloo+Paaji+2:wght@700&display=swap" rel="stylesheet">
+
         <meta name="google-signin-scope" content="profile email">
         <meta name="google-signin-client_id" content="735523388528-7aj2dq0cj1670lsmfq8vbbn919abd7uv.apps.googleusercontent.com">
         <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+        <!-- Cookie Consent by https://www.FreePrivacyPolicy.com -->
+        <script type="text/javascript" src="//www.freeprivacypolicy.com/public/cookie-consent/3.0.0/cookie-consent.js"></script>
+        <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', function () {
+                cookieconsent.run({"notice_banner_type":"headline","consent_type":"express","palette":"light","language":"en","website_name":"layoffs.de","cookies_policy_url":"https://layoffs.de/privacy","change_preferences_selector":""});
+            });
+        </script>
+
+        <noscript><a href="https://www.FreePrivacyPolicy.com/cookie-consent/">Cookie Consent by Free Privacy Policy Generator</a></noscript>
+        <!-- End Cookie Consent -->
+
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
@@ -20,9 +36,12 @@
         <div class="container">
             {% block body %}{% endblock %}
         </div>
+        {{ include('inc/footer.html.twig') }}
+
         <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
         <script
                 src="https://code.jquery.com/jquery-3.4.1.min.js"
                 integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
@@ -43,7 +62,7 @@
                 </div>
             </div>
         </div>
-        
+
         {% block javascripts %}{% endblock %}
     </body>
 </html>
