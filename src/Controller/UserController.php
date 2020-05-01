@@ -185,7 +185,16 @@ class UserController extends AbstractController
     {
         $token = $request->request->get('token');
 
-        if (!empty($token)) {
+
+        $cookies = $request->cookies;
+
+        // check cookie consent
+        $consent = false;
+        if ($cookies->has('cookie_consent_user_accepted')) {
+            $consent = $cookies->get('cookie_consent_user_accepted');
+        }
+
+        if (!empty($token) && ($consent == true)) {
             $clientId = $_ENV['OAUTH_GOOGLE_ID'];
 
             // Get $id_token via HTTPS POST.

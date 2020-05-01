@@ -60,7 +60,6 @@
 
     <div class="row">
 
-
         <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
 
             {% if feeds %}
@@ -147,7 +146,7 @@
 
                             </div>
 
-                            <hr />
+                            <hr/>
 
                         {% endif %}
 
@@ -183,7 +182,7 @@
         </div>
 
     </div>
-    
+
 {% endblock %}
 
 
@@ -192,25 +191,46 @@
 
 
      <script>
-
+         function getCookie(cname) {
+             var name = cname + "=";
+             var decodedCookie = decodeURIComponent(document.cookie);
+             var ca = decodedCookie.split(';');
+             for (var i = 0; i < ca.length; i++) {
+                 var c = ca[i];
+                 while (c.charAt(0) == ' ') {
+                     c = c.substring(1);
+                 }
+                 if (c.indexOf(name) == 0) {
+                     return c.substring(name.length, c.length);
+                 }
+             }
+             return "";
+         }
 
          function onSuccess(googleUser) {
-             const access_token = googleUser.getAuthResponse().id_token;
-             var userAuthenticated = document.querySelector('.js-user-auth');
-             var isAuthenticated = userAuthenticated.dataset.isAuthenticated;
 
-             if (isAuthenticated === 'false') {
+             if (getCookie('cookie_consent_user_accepted') === 'true') {
 
-                 $.post('{{ path('user_login') }}',
 
-                     {token: access_token},
+                 const access_token = googleUser.getAuthResponse().id_token;
+                 var userAuthenticated = document.querySelector('.js-user-auth');
+                 var isAuthenticated = userAuthenticated.dataset.isAuthenticated;
 
-                     function (response) {
+                 if (isAuthenticated === 'false') {
 
-                         location.reload();
-                         return false;
+                     $.post('{{ path('user_login') }}',
 
-                     }, "json");
+                         {token: access_token},
+
+                         function (response) {
+
+                             location.reload();
+                             return false;
+
+                         }, "json");
+                 }
+             } else {
+                 signOut();
              }
 
          }
@@ -219,7 +239,9 @@
              console.log(error);
          }
 
+
          function renderButton() {
+
              gapi.signin2.render('my-signin2', {
                  'scope': 'profile email',
                  'width': 240,
